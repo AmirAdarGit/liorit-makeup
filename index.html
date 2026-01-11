@@ -435,30 +435,31 @@
     <script>
         let currentSlideIndex = 0;
         const totalSlides = 13;
+        let imagesLoaded = false;
         
-        // Preload all images immediately for instant navigation
-        const imageUrls = [
-            'images/6Z3B1833.jpg',
-            'images/6Z3B1834.jpg',
-            'images/6Z3B1838.jpg',
-            'images/6Z3B1852.jpg',
-            'images/6Z3B1854.jpg',
-            'images/6Z3B1861.jpg',
-            'images/6Z3B2688.jpg',
-            'images/6Z3B2690.jpg',
-            'images/6Z3B2701.jpg',
-            'images/6Z3B2702.jpg',
-            'images/6Z3B2704.jpg',
-            'images/6Z3B2708.jpg',
-            'images/6Z3B3496.jpg'
-        ];
-        
-        // Force preload all images
-        window.addEventListener('DOMContentLoaded', function() {
-            imageUrls.forEach(url => {
-                const img = new Image();
-                img.src = url;
+        // Preload all images on page load
+        window.addEventListener('load', function() {
+            const allImages = document.querySelectorAll('.carousel-slide img');
+            let loadedCount = 0;
+            
+            allImages.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                } else {
+                    img.addEventListener('load', function() {
+                        loadedCount++;
+                        if (loadedCount === allImages.length) {
+                            imagesLoaded = true;
+                            console.log('All images loaded!');
+                        }
+                    });
+                }
             });
+            
+            if (loadedCount === allImages.length) {
+                imagesLoaded = true;
+                console.log('All images already loaded!');
+            }
         });
 
         function openWhatsApp() {
@@ -485,8 +486,17 @@
             dots.forEach(dot => dot.classList.remove('active'));
 
             // Show current slide
-            slides[currentSlideIndex].classList.add('active');
+            const currentSlide = slides[currentSlideIndex];
+            currentSlide.classList.add('active');
             dots[currentSlideIndex].classList.add('active');
+
+            // Ensure image is loaded
+            const img = currentSlide.querySelector('img');
+            if (img && !img.complete) {
+                img.onload = function() {
+                    console.log('Image loaded:', img.src);
+                };
+            }
 
             // Update counter
             document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
