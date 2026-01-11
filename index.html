@@ -435,6 +435,31 @@
     <script>
         let currentSlideIndex = 0;
         const totalSlides = 13;
+        
+        // Preload all images immediately for instant navigation
+        const imageUrls = [
+            'images/6Z3B1833.jpg',
+            'images/6Z3B1834.jpg',
+            'images/6Z3B1838.jpg',
+            'images/6Z3B1852.jpg',
+            'images/6Z3B1854.jpg',
+            'images/6Z3B1861.jpg',
+            'images/6Z3B2688.jpg',
+            'images/6Z3B2690.jpg',
+            'images/6Z3B2701.jpg',
+            'images/6Z3B2702.jpg',
+            'images/6Z3B2704.jpg',
+            'images/6Z3B2708.jpg',
+            'images/6Z3B3496.jpg'
+        ];
+        
+        // Force preload all images
+        window.addEventListener('DOMContentLoaded', function() {
+            imageUrls.forEach(url => {
+                const img = new Image();
+                img.src = url;
+            });
+        });
 
         function openWhatsApp() {
             const phone = '972544256326';
