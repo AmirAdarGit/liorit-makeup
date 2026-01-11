@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ליאורית אדר - מאפרת מקצועית. איפור כלות, אירועים וצילומים. בוגרת IL-MAKIAGE Professional">
     <title>ליאורית אדר - מאפרת מקצועית</title>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
@@ -116,6 +118,29 @@
             .carousel-arrow.next {
                 right: 10px;
             }
+        }
+        
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ec4899;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 5;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .carousel-slide img {
+            background: #f3f4f6;
         }
     </style>
 </head>
@@ -424,6 +449,23 @@
 
             // Update counter
             document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            
+            // Preload adjacent images for smooth navigation
+            preloadAdjacentImages(currentSlideIndex);
+        }
+        
+        function preloadAdjacentImages(index) {
+            // Preload next and previous images
+            const nextIndex = (index + 1) % totalSlides;
+            const prevIndex = (index - 1 + totalSlides) % totalSlides;
+            
+            const slides = document.querySelectorAll('.carousel-slide');
+            [nextIndex, prevIndex].forEach(i => {
+                const img = slides[i].querySelector('img');
+                if (img && img.loading === 'lazy') {
+                    img.loading = 'eager';
+                }
+            });
         }
 
         function changeSlide(direction) {
